@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trusted Sources Academy - Easy Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&family=IBM+Plex+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-dark:#1E1912;
+    --paper:#F3ECD8;
+    --paper-shade:#E6DCC0;
+    --ink:#2B2620;
+    --teal:#2F6E68;
+    --teal-deep:#1F4A46;
+    --stamp-red:#A63A3A;
+    --brass:#C79A4B;
+    --cloud:#FFFDF7;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Nunito',sans-serif;
+    font-size:18px;
+    background:
+      radial-gradient(circle at 12% 15%, rgba(47,110,104,0.16), transparent 42%),
+      radial-gradient(circle at 88% 80%, rgba(166,58,58,0.10), transparent 42%),
+      var(--bg-dark);
+    color:var(--paper);
+    min-height:100vh;
+    padding:24px 16px 60px;
+  }
+  .app{max-width:720px;margin:0 auto;}
+
+  .hq-header{ text-align:center; margin-bottom:18px; }
+  .hq-eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--brass); margin-bottom:6px; font-weight:700;
+  }
+  .hq-title{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:clamp(26px,5vw,34px);
+    color:var(--paper);
+    margin:0 0 6px;
+  }
+  .hq-subtitle{
+    font-size:16px; color:var(--teal);
+    font-weight:700;
+    margin-bottom:16px;
+  }
+  .stamp-bar{
+    display:flex; justify-content:center; gap:10px; flex-wrap:wrap;
+    background:rgba(243,236,216,0.05);
+    border:1px solid rgba(243,236,216,0.14);
+    border-radius:14px;
+    padding:14px;
+  }
+  .stamp-slot{
+    width:56px;height:56px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:24px;
+    background:rgba(243,236,216,0.04);
+    border:2px dashed rgba(243,236,216,0.28);
+    filter:grayscale(1); opacity:0.45;
+    transition:all 0.35s ease;
+  }
+  .stamp-slot.earned{
+    filter:grayscale(0); opacity:1;
+    background:radial-gradient(circle at 30% 30%, #fdf7e6, var(--brass) 75%);
+    border:2px solid var(--brass);
+    box-shadow:0 0 16px rgba(199,154,75,0.5);
+  }
+  .stamp-slot.pop{ animation:pop 0.6s ease; }
+  @keyframes pop{
+    0%{transform:scale(0.6);}
+    55%{transform:scale(1.25);}
+    100%{transform:scale(1);}
+  }
+  .stamp-caption{
+    text-align:center; font-size:15px; font-weight:700;
+    color:rgba(243,236,216,0.65);
+    margin-top:8px;
+  }
+
+  .file-strip{
+    display:flex; align-items:center; gap:12px;
+    margin:20px 0 10px;
+    padding:12px 16px;
+    border-left:4px solid var(--stamp-red);
+    background:rgba(166,58,58,0.10);
+    font-size:16px; font-weight:700;
+    color:var(--paper);
+  }
+
+  .mission{
+    display:none;
+    background:var(--paper);
+    color:var(--ink);
+    border-radius:10px;
+    padding:26px 24px 22px;
+    margin-top:14px;
+    box-shadow:0 18px 40px rgba(0,0,0,0.4);
+    border:1px solid var(--paper-shade);
+  }
+  .mission.active{ display:block; animation:rise 0.4s ease; }
+  @keyframes rise{ from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
+  .mission-eyebrow{
+    font-size:14px; font-weight:800; text-transform:uppercase;
+    color:var(--teal-deep); margin-bottom:6px; letter-spacing:0.5px;
+  }
+  .mission h2{
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:26px;
+    margin:0 0 14px; color:var(--ink);
+  }
+  .mission p{ font-size:18px; line-height:1.7; margin:0 0 14px; }
+  .tip-list{ margin:0 0 16px; padding-left:0; list-style:none; }
+  .tip-list li{
+    font-size:17px; line-height:1.5; background:var(--paper-shade);
+    border-left:5px solid var(--teal);
+    padding:12px 14px; border-radius:6px; margin-bottom:10px; font-weight:700;
+  }
+
+  .name-input{
+    width:100%; font-family:'Nunito',sans-serif; font-size:18px; font-weight:700;
+    padding:14px 16px; border-radius:8px; border:2px solid #cabf9a; outline:none; margin-bottom:12px;
+    background:var(--cloud);
+  }
+  .name-input:focus{ border-color:var(--teal); }
+
+  .scenario-card{ background:var(--paper-shade); border-radius:10px; padding:16px; margin-bottom:14px; }
+  .scenario-text{ font-weight:700; font-size:17px; line-height:1.5; margin-bottom:12px; }
+  .btn-row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .choice-btn{
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:16px;
+    padding:12px 20px; border-radius:8px; border:2px solid var(--ink);
+    background:var(--cloud); color:var(--ink); cursor:pointer;
+    transition:transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+  }
+  .choice-btn:hover{ transform:translateY(-1px); }
+  .choice-btn.correct{ background:var(--teal); border-color:var(--teal-deep); color:white; }
+  .choice-btn.wrong{ background:var(--stamp-red); border-color:#7a2828; color:white; }
+  .feedback{ margin-top:12px; font-size:16px; font-weight:700; line-height:1.5; padding:10px 12px; border-radius:8px; display:none; }
+  .feedback.show{ display:block; }
+  .feedback.good{ background:#dcece6; color:#1f4a46; }
+  .feedback.bad{ background:#f2dede; color:#7a2828; }
+
+  .sort-item{
+    display:inline-block; background:var(--cloud); border:2px solid var(--ink);
+    border-radius:8px; padding:12px 18px; font-weight:800; font-size:16px;
+    margin:5px; cursor:pointer; transition:all 0.2s ease;
+  }
+  .sort-item.done-a{ background:var(--teal); color:white; opacity:0.6; cursor:default; }
+  .sort-item.done-c{ background:var(--stamp-red); color:white; opacity:0.6; cursor:default; }
+  .sort-item.shake{ animation:shake 0.4s ease; }
+  @keyframes shake{ 0%,100%{transform:translateX(0);} 25%{transform:translateX(-5px);} 75%{transform:translateX(5px);} }
+  .buckets{ display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }
+  .bucket{ flex:1; min-width:130px; border-radius:8px; padding:12px; text-align:center;
+    font-size:14px; font-weight:800; letter-spacing:0.3px; min-height:36px; }
+  .bucket-a{ background:#dcece6; border:2px dashed var(--teal); }
+  .bucket-c{ background:#f2dede; border:2px dashed var(--stamp-red); }
+
+  .reveal-box{ display:none; margin-top:12px; font-size:16px; font-weight:700; line-height:1.5; background:#dcece6; color:#1f4a46; padding:12px 14px; border-radius:8px; }
+  .reveal-box.show{ display:block; }
+
+  .checklist-box{
+    background:var(--paper-shade); border-radius:10px; padding:16px 18px; margin-bottom:16px;
+  }
+  .checklist-box label{
+    display:flex; align-items:flex-start; gap:10px; font-size:17px; font-weight:700;
+    margin-bottom:12px; cursor:pointer; line-height:1.4;
+  }
+  .checklist-box input{ margin-top:4px; width:20px; height:20px; }
+
+  .recap-grid{ display:grid; gap:11px; margin-bottom:18px; }
+  .recap-item{ display:flex; gap:12px; align-items:flex-start; background:var(--paper-shade); border-radius:8px; padding:12px 14px; }
+  .recap-emoji{ font-size:24px; }
+  .recap-text{ font-size:16px; font-weight:700; line-height:1.4; }
+
+  .cert{
+    text-align:center; border:3px double var(--brass); border-radius:10px;
+    padding:30px 20px; background:linear-gradient(180deg,#fbf6e6,var(--cloud));
+    position:relative;
+  }
+  .cert-eyebrow{ font-size:13px; letter-spacing:1.5px; color:var(--teal-deep); font-weight:800;}
+  .cert-name{ font-family:'Baloo 2',sans-serif; font-weight:800; font-size:26px; color:var(--ink); margin:10px 0 4px;}
+  .cert-line{ font-size:15px; font-weight:700; color:#5a5340; margin-bottom:16px; line-height:1.4;}
+  .cert-badges{ font-size:28px; letter-spacing:6px; margin-bottom:12px;}
+  .cert-date{ font-size:13px; font-weight:700; color:#8a8264; }
+
+  .nav-row{ display:flex; justify-content:space-between; align-items:center; margin-top:20px; gap:10px; }
+  .nav-btn{
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:16px;
+    padding:14px 22px; border-radius:10px; border:none; cursor:pointer;
+    transition:transform 0.15s ease, opacity 0.15s ease;
+  }
+  .nav-btn:hover{ transform:translateY(-2px); }
+  .nav-btn.primary{ background:var(--teal); color:white; }
+  .nav-btn.ghost{ background:transparent; color:var(--paper); border:2px solid rgba(243,236,216,0.3); }
+  .nav-btn:disabled{ opacity:0.35; cursor:not-allowed; transform:none; }
+  .hint{ font-size:14px; font-weight:700; color:rgba(243,236,216,0.55); text-align:center; margin-top:10px; }
+  .parent-note{ margin-top:26px; font-size:13px; color:rgba(243,236,216,0.4); text-align:center; line-height:1.6; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="hq-header">
+    <div class="hq-eyebrow">Easy Read Edition</div>
+    <div class="hq-title">🧭 Trusted Sources Academy</div>
+    <div class="hq-subtitle">Learn to find true information. 6 easy steps. About 1 hour.</div>
+    <div class="stamp-bar" id="stampBar">
+      <div class="stamp-slot" data-badge="0">🧭</div>
+      <div class="stamp-slot" data-badge="1">🏛</div>
+      <div class="stamp-slot" data-badge="2">🩺</div>
+      <div class="stamp-slot" data-badge="3">📰</div>
+      <div class="stamp-slot" data-badge="4">🤖</div>
+      <div class="stamp-slot" data-badge="5">✅</div>
+    </div>
+    <div class="stamp-caption" id="stampCaption">0 of 6 badges earned</div>
+  </div>
+
+  <div class="file-strip" id="fileStrip">
+    <span>Step 1 of 6 — Read this. Then do the activity.</span>
+  </div>
+
+  <!-- STEP 0: WELCOME -->
+  <div class="mission active" id="mission0">
+    <div class="mission-eyebrow">Welcome · About 5 minutes</div>
+    <h2>Let's Get Started</h2>
+    <p>The internet has good information. It also has bad information.</p>
+    <p>Social media and AI chat can help you start. But they are not always right.</p>
+    <p>This class has 6 short steps. Each step takes about 10 minutes.</p>
+    <p>You will learn how to find true information about your health, your city, and the news.</p>
+    <p>Type your name below. You get a certificate at the end.</p>
+    <input class="name-input" id="agentName" placeholder="Type your name..." maxlength="30">
+    <div class="hint">Press "Start Step 1" when you are ready.</div>
+  </div>
+
+  <!-- STEP 1: WEB ADDRESSES -->
+  <div class="mission" id="mission1">
+    <div class="mission-eyebrow">Step 1 · About 10 minutes</div>
+    <h2>🧭 Check the Website Address</h2>
+    <p>Look at the end of a website address. It gives you a clue.</p>
+    <ul class="tip-list">
+      <li>🏛 .gov = Made by the government. Usually true.</li>
+      <li>🎓 .edu = Made by a school. Usually true.</li>
+      <li>🤝 .org = Made by a group. Usually good. Check who pays for it.</li>
+      <li>🏢 .com = Made by a business. Could be good or bad. Check first.</li>
+    </ul>
+    <p>Tap each website. Is it safe to trust, or should you check first?</p>
+    <div id="m1items"></div>
+    <div class="buckets">
+      <div class="bucket bucket-a">TRUST IT</div>
+      <div class="bucket bucket-c">CHECK FIRST</div>
+    </div>
+    <div class="feedback" id="m1feedback"></div>
+  </div>
+
+  <!-- STEP 2: LOCAL INFO -->
+  <div class="mission" id="mission2">
+    <div class="mission-eyebrow">Step 2 · About 10 minutes</div>
+    <h2>🏛 Find News Near You</h2>
+    <p>Want to know what is happening near you? Try these places first:</p>
+    <ul class="tip-list">
+      <li>🏢 Your city website — real news and events.</li>
+      <li>📚 Your public library — free classes and events.</li>
+      <li>📻 Your local newspaper or radio station.</li>
+      <li>☎️ Call 211 — a free phone line for help near you.</li>
+    </ul>
+    <p>What should you check first?</p>
+    <div id="m2scenarios"></div>
+  </div>
+
+  <!-- STEP 3: HEALTH INFO -->
+  <div class="mission" id="mission3">
+    <div class="mission-eyebrow">Step 3 · About 10 minutes</div>
+    <h2>🩺 Health Information</h2>
+    <p>When you read health news, look for good signs and warning signs.</p>
+    <ul class="tip-list">
+      <li>✅ Good sign: words like "doctors," "hospital," "study," or "CDC."</li>
+      <li>⚠️ Warning sign: words like "miracle," "secret," or "cures everything."</li>
+    </ul>
+    <p>Is each one a good sign, or a warning sign?</p>
+    <div id="m3scenarios"></div>
+  </div>
+
+  <!-- STEP 4: NEWS -->
+  <div class="mission" id="mission4">
+    <div class="mission-eyebrow">Step 4 · About 10 minutes</div>
+    <h2>📰 Check Before You Trust</h2>
+    <p>Before you believe a news story, try this:</p>
+    <ul class="tip-list">
+      <li>1️⃣ Open a new tab.</li>
+      <li>2️⃣ Search the name of the website.</li>
+      <li>3️⃣ See what other people say about it.</li>
+    </ul>
+    <p>This only takes one minute. What should you do in each case?</p>
+    <div id="m4scenarios"></div>
+  </div>
+
+  <!-- STEP 5: SOCIAL MEDIA & AI -->
+  <div class="mission" id="mission5">
+    <div class="mission-eyebrow">Step 5 · About 10 minutes</div>
+    <h2>🤖 Social Media and AI</h2>
+    <p>Social media shows you what gets clicks. Not always what is true.</p>
+    <p>AI chat, like this one, can sound very sure. But it can still be wrong. This is called "hallucinating."</p>
+    <p>Always double check important answers. Is each sentence true or false?</p>
+    <div id="m5scenarios"></div>
+  </div>
+
+  <!-- STEP 6: CHECKLIST -->
+  <div class="mission" id="mission6">
+    <div class="mission-eyebrow">Step 6 · About 10 minutes</div>
+    <h2>✅ Your 4-Question Checklist</h2>
+    <p>Before you trust or share something, ask these 4 questions:</p>
+    <div class="checklist-box">
+      <label><input type="checkbox" class="ck">WHO wrote this?</label>
+      <label><input type="checkbox" class="ck">WHEN was it written?</label>
+      <label><input type="checkbox" class="ck">WHERE did it come from?</label>
+      <label><input type="checkbox" class="ck">CAN I find this somewhere else too?</label>
+    </div>
+    <p>Now try it. Tap to see the answer.</p>
+    <div id="m6scenarios"></div>
+  </div>
+
+  <!-- FINAL: DONE -->
+  <div class="mission" id="mission7">
+    <div class="mission-eyebrow">You Did It · About 5 minutes</div>
+    <h2>⭐ You Finished!</h2>
+    <p>Great job! Here is a quick reminder of what you learned.</p>
+    <div class="recap-grid">
+      <div class="recap-item"><div class="recap-emoji">🧭</div><div class="recap-text">.gov and .edu websites are usually safe to trust.</div></div>
+      <div class="recap-item"><div class="recap-emoji">🏛</div><div class="recap-text">For local news, check your city website, the library, or 211.</div></div>
+      <div class="recap-item"><div class="recap-emoji">🩺</div><div class="recap-text">Health tips should come from doctors and real studies, not miracle claims.</div></div>
+      <div class="recap-item"><div class="recap-emoji">📰</div><div class="recap-text">Open a new tab and search a website's name before you trust it.</div></div>
+      <div class="recap-item"><div class="recap-emoji">🤖</div><div class="recap-text">Social media and AI can be wrong. Always double check.</div></div>
+      <div class="recap-item"><div class="recap-emoji">✅</div><div class="recap-text">Ask: Who? When? Where from? Can I check it somewhere else?</div></div>
+    </div>
+    <div class="cert" id="certificate">
+      <div class="cert-eyebrow">TRUSTED SOURCES ACADEMY</div>
+      <div class="cert-name" id="certName">Your Name</div>
+      <div class="cert-line">finished all 6 steps of Trusted Sources Training</div>
+      <div class="cert-badges">🧭🏛🩺📰🤖✅</div>
+      <div class="cert-date" id="certDate"></div>
+    </div>
+    <div class="hint" style="margin-top:16px;">
+      <button class="nav-btn primary" onclick="window.print()">🖨 Print your certificate</button>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn ghost" id="backBtn" onclick="changeMission(-1)">← Back</button>
+    <button class="nav-btn primary" id="nextBtn" onclick="changeMission(1)">Start Step 1 →</button>
+  </div>
+  <div class="hint" id="gateHint"></div>
+
+  <div class="parent-note">
+    Helper note: this version uses short sentences and simple words. Feel free to read it out loud together, or take breaks between steps.
+  </div>
+</div>
+
+<script>
+  const missionIds = ['mission0','mission1','mission2','mission3','mission4','mission5','mission6','mission7'];
+  let current = 0;
+  const badgeEarned = [false,false,false,false,false,false];
+  const nextLabels = ['Start Step 1 →','Step 2 →','Step 3 →','Step 4 →','Step 5 →','Step 6 →','Finish →','🎉 Done!'];
+  const fileLines = [
+    'Step 1 of 6 — Read this. Then do the activity.',
+    'Step 1 of 6 — Check the Website Address. Sort each one to go on.',
+    'Step 2 of 6 — Find News Near You. Pick the best answer.',
+    'Step 3 of 6 — Health Information. Mark every warning sign.',
+    'Step 4 of 6 — Check Before You Trust. Pick the best answer.',
+    'Step 5 of 6 — Social Media and AI. True or false, every time.',
+    'Step 6 of 6 — Your Checklist. Tap to see each answer.',
+    'You are done! Get your certificate below.'
+  ];
+
+  function showMission(i){
+    missionIds.forEach((id,idx)=>{
+      document.getElementById(id).classList.toggle('active', idx===i);
+    });
+    document.getElementById('fileStrip').innerHTML = '<span>' + fileLines[i] + '</span>';
+    document.getElementById('backBtn').style.visibility = i===0 ? 'hidden' : 'visible';
+    document.getElementById('nextBtn').textContent = nextLabels[i];
+    updateGate();
+  }
+
+  function changeMission(dir){
+    const target = current + dir;
+    if(target < 0 || target >= missionIds.length) return;
+    if(dir === 1){
+      if(current===0){
+        let name = document.getElementById('agentName').value.trim();
+        if(!name) name = "Your Name";
+        document.getElementById('certName').textContent = name;
+      }
+      if(!canAdvance(current)) return;
+      const badgeIdx = current - 1;
+      if(badgeIdx >= 0 && badgeIdx <= 5) earnBadge(badgeIdx);
+      if(current === 6){
+        const d = new Date();
+        document.getElementById('certDate').textContent = d.toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
+      }
+    }
+    current = target;
+    showMission(current);
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function canAdvance(i){
+    if(i===0) return true;
+    if(i===1) return m1done;
+    if(i===2) return m2done;
+    if(i===3) return m3done;
+    if(i===4) return m4done;
+    if(i===5) return m5done;
+    if(i===6) return true;
+    return true;
+  }
+
+  function updateGate(){
+    const hint = document.getElementById('gateHint');
+    const nextBtn = document.getElementById('nextBtn');
+    let ok = canAdvance(current);
+    if(current===7){ nextBtn.style.display='none'; hint.textContent=''; return; }
+    nextBtn.style.display='inline-block';
+    nextBtn.disabled = !ok;
+    hint.textContent = ok ? '' : 'Finish the activity above to go on.';
+  }
+
+  function earnBadge(idx){
+    if(idx<0 || idx>5 || badgeEarned[idx]) return;
+    badgeEarned[idx] = true;
+    const slot = document.querySelector('.stamp-slot[data-badge="'+idx+'"]');
+    slot.classList.add('earned','pop');
+    setTimeout(()=>slot.classList.remove('pop'), 650);
+    const count = badgeEarned.filter(Boolean).length;
+    document.getElementById('stampCaption').textContent = count + ' of 6 badges earned';
+  }
+
+  /* ---------- STEP 1: WEBSITE SORT ---------- */
+  const m1data = [
+    {label:'cdc.gov', bucket:'a'},
+    {label:'yourcity.gov', bucket:'a'},
+    {label:'mayoclinic.org', bucket:'a'},
+    {label:'random-blog.com', bucket:'c'},
+    {label:'clickbait-news.com', bucket:'c'}
+  ];
+  let m1correct = 0, m1done = false;
+  const m1container = document.getElementById('m1items');
+  m1data.forEach((item)=>{
+    const chip = document.createElement('div');
+    chip.className = 'sort-item';
+    chip.textContent = item.label;
+    chip.addEventListener('click', ()=>{
+      if(/done-/.test(chip.className)) return;
+      const guess = confirm(item.label + '\n\nOK = Check First\nCancel = Trust It');
+      const guessed = guess ? 'c' : 'a';
+      const fb = document.getElementById('m1feedback');
+      if(guessed === item.bucket){
+        chip.classList.add('done-'+item.bucket);
+        m1correct++;
+        fb.textContent = '✅ That is right!';
+        fb.className = 'feedback show good';
+        if(m1correct >= m1data.length){ m1done = true; fb.textContent = '🧭 Great job! You sorted them all.'; updateGate(); }
+      } else {
+        chip.classList.add('shake');
+        setTimeout(()=>chip.classList.remove('shake'), 400);
+        fb.textContent = '🤔 Try again. Look at the end of the address.';
+        fb.className = 'feedback show bad';
+      }
+    });
+    m1container.appendChild(chip);
+  });
+
+  /* ---------- STEP 2: LOCAL INFO ---------- */
+  const m2data = [
+    {text:'You want to find a free event this weekend.', answer:'Check your city website or library. They list real events.'},
+    {text:'You want to know if trash pickup is late.', answer:'Check your city website. This is exactly what it is for.'},
+    {text:'You need a low-cost doctor near you.', answer:'Call 211. It is a free helpline for services near you.'}
+  ];
+  let m2count = 0, m2done = false;
+  buildRevealSet('m2scenarios', m2data, ()=>{ m2count++; if(m2count>=m2data.length){ m2done=true; updateGate(); } });
+
+  /* ---------- STEP 3: HEALTH SIGNALS ---------- */
+  const m3data = [
+    {text:'"Doctors tested this medicine in a real study."', answer:'safe', explain:'Good sign! It talks about real research.'},
+    {text:'"This secret cure works fast! Doctors hate it!"', answer:'flag', explain:'Warning sign! Words like "secret" try to trick you.'},
+    {text:'"The CDC says to talk to your doctor first."', answer:'safe', explain:'Good sign! It points you to your own doctor.'},
+    {text:'"This cured my friend overnight. No study needed!"', answer:'flag', explain:'Warning sign! One story is not real proof.'}
+  ];
+  let m3answered = 0, m3done = false;
+  buildScenarioSet('m3scenarios', m3data, 'Good Sign', 'Warning Sign', ()=>{
+    m3answered++;
+    if(m3answered >= m3data.length){ m3done = true; updateGate(); }
+  });
+
+  /* ---------- STEP 4: NEWS CHECKS ---------- */
+  const m4data = [
+    {text:'You see a wild claim on a website you don\'t know.', answer:'Open a new tab. Search the website\'s name. See if others trust it.'},
+    {text:'A friend sends a picture of a headline. No link.', answer:'Search for the real story yourself. Pictures can be fake or cut short.'},
+    {text:'You want to know if a story is true.', answer:'Check if two or more trusted news sites say the same thing.'}
+  ];
+  let m4count = 0, m4done = false;
+  buildRevealSet('m4scenarios', m4data, ()=>{ m4count++; if(m4count>=m4data.length){ m4done=true; updateGate(); } });
+
+  /* ---------- STEP 5: TRUE/FALSE ---------- */
+  const m5data = [
+    {text:'If something is popular online, it is always true.', answer:'flag', explain:'False! Popular does not mean true.'},
+    {text:'AI can sound very sure but still be wrong.', answer:'safe', explain:'True! This is called "hallucinating."'},
+    {text:'You should double check AI answers about health or money.', answer:'safe', explain:'True! Always check important answers.'},
+    {text:'AI always knows about things that happened today.', answer:'flag', explain:'False! AI does not always know the newest news.'}
+  ];
+  let m5answered = 0, m5done = false;
+  buildScenarioSet('m5scenarios', m5data, 'True', 'False', ()=>{
+    m5answered++;
+    if(m5answered >= m5data.length){ m5done = true; updateGate(); }
+  }, 'safe', 'flag');
+
+  /* ---------- STEP 6: CHECKLIST ---------- */
+  const m6data = [
+    {text:'A post says a new city law passed yesterday. No author. No link.', answer:'This fails the test. Check your city\'s real website first.'},
+    {text:'A post says a health rule changed. The only source is another post.', answer:'This fails the test. Check the health agency\'s real website.'}
+  ];
+  let m6count = 0;
+  buildRevealSet('m6scenarios', m6data, ()=>{ m6count++; });
+
+  /* ---------- shared builders ---------- */
+  function buildScenarioSet(containerId, data, leftLabel, rightLabel, onCorrect, leftKey, rightKey){
+    leftKey = leftKey || 'safe'; rightKey = rightKey || 'flag';
+    const container = document.getElementById(containerId);
+    data.forEach((item)=>{
+      const card = document.createElement('div');
+      card.className = 'scenario-card';
+      card.innerHTML = `
+        <div class="scenario-text">${item.text}</div>
+        <div class="btn-row">
+          <button class="choice-btn" data-choice="${leftKey}">${leftLabel}</button>
+          <button class="choice-btn" data-choice="${rightKey}">${rightLabel}</button>
+        </div>
+        <div class="feedback"></div>
+      `;
+      const btnL = card.querySelector('[data-choice="'+leftKey+'"]');
+      const btnR = card.querySelector('[data-choice="'+rightKey+'"]');
+      const fb = card.querySelector('.feedback');
+      let locked = false;
+      function handle(choice, btn, otherBtn){
+        if(locked) return;
+        const correct = choice === item.answer;
+        if(correct){
+          locked = true;
+          btn.classList.add('correct');
+          otherBtn.disabled = true;
+          fb.textContent = '✅ ' + item.explain;
+          fb.className = 'feedback show good';
+          onCorrect();
+        } else {
+          btn.classList.add('wrong');
+          setTimeout(()=>btn.classList.remove('wrong'), 500);
+          fb.textContent = 'Try again. Think about it.';
+          fb.className = 'feedback show bad';
+        }
+      }
+      btnL.addEventListener('click', ()=>handle(leftKey, btnL, btnR));
+      btnR.addEventListener('click', ()=>handle(rightKey, btnR, btnL));
+      container.appendChild(card);
+    });
+  }
+
+  function buildRevealSet(containerId, data, onReveal){
+    const container = document.getElementById(containerId);
+    data.forEach((item)=>{
+      const card = document.createElement('div');
+      card.className = 'scenario-card';
+      card.innerHTML = `
+        <div class="scenario-text">${item.text}</div>
+        <div class="btn-row"><button class="choice-btn">Tap to See Answer</button></div>
+        <div class="reveal-box"></div>
+      `;
+      const btn = card.querySelector('.choice-btn');
+      const box = card.querySelector('.reveal-box');
+      btn.addEventListener('click', ()=>{
+        if(btn.disabled) return;
+        btn.disabled = true;
+        btn.classList.add('correct');
+        box.textContent = '✅ ' + item.answer;
+        box.classList.add('show');
+        onReveal();
+      });
+      container.appendChild(card);
+    });
+  }
+
+  showMission(0);
+</script>
+</body>
+</html>
